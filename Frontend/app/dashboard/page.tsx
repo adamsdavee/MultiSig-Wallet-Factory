@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, LoaderIcon } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import Link from "next/link";
 import { client } from "../client";
 import { useActiveAccount, ConnectButton} from "thirdweb/react";
 import MultiSigCreationModal from "../create/multisigcreation";
@@ -56,25 +55,8 @@ export default function Dashboard() {
       const samrtWallet = await contractFactory.getDeployersWallets(signer.address);
       console.log(`Deployer's wallets: ${samrtWallet}`);
 
-      // const proposals = await contractFactory.getAllProposals("0xA69cfd8Cc168C1181EBE546a7c10fcf9253EeA6d");
-
-      // const owners = await contractFactory.getOwners("0xA69cfd8Cc168C1181EBE546a7c10fcf9253EeA6d");
-      // // await owners.wait();
-      // console.log(`owners: ${owners}`)
-
-      // console.log(`proposals: ${proposals}`);
-
-      // setAddress(signer.address);
       setWallet(samrtWallet);
 
-      // setFee(fee);
-
-      // await contractFactory.connect(signer).createMultiSig(_owners, BigInt(1))
-
-      // Token details
-      // const totalTokens = await contractFactory.totalTokens();
-      // console.log(totalTokens);
-      // const tokens = [];
   } else {
     console.error("Contract details not found!")
   }
