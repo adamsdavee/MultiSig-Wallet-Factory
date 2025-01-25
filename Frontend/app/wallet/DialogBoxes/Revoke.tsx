@@ -18,7 +18,7 @@ const RevokeTxn = ({factory, tempAddress} : {factory: ethers.Contract, tempAddre
 
     async function confirmTxn(addressSig: string, amount: bigint) {
 
-        console.log("Confirming proposal....")
+        console.log("Revoking proposal....")
       
         // Call the submitTransaction function
         const transaction = await factory. revokeConfirmedTransaction(addressSig, amount);
@@ -29,16 +29,16 @@ const RevokeTxn = ({factory, tempAddress} : {factory: ethers.Contract, tempAddre
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
     <DialogTrigger asChild>
-      <Button className="bg-neon-green text-blue-900 hover:bg-neon-green/90">Revoke confirmed Proposal</Button>
+      <Button className="bg-red-700 hover:bg-red-600">Revoke confirmed Proposal</Button>
     </DialogTrigger>
     <DialogContent className="bg-blue-900 text-white">
       <DialogHeader>
-        <DialogTitle>Confirm Transaction</DialogTitle>
+        <DialogTitle>Revoke Transaction</DialogTitle>
       </DialogHeader>
       <form className="space-y-4">
         <div>
           <Label htmlFor="value">Proposal Index</Label>
-          <Input id="value" type="number" step="0.01" className="bg-blue-800 border-blue-700 text-white" value={value} onChange={(e) => setValue(e.target.value)}/>
+          <Input id="value" type="number" step="1" className="bg-blue-800 border-blue-700 text-white" value={value} onChange={(e) => setValue(e.target.value)}/>
         </div>
         
       </form>
@@ -48,10 +48,11 @@ const RevokeTxn = ({factory, tempAddress} : {factory: ethers.Contract, tempAddre
           const success = await confirmTxn(tempAddress, BigInt(value));
           console.log(success);
 
-          alert(`Proposal Confirmed!`);
+          alert(`Proposal Revoked!`);
 
         } catch(e) {
           console.log(e);
+          alert("No confirmation")
         }
       }}>Revoke</Button>
     </DialogContent>

@@ -32,6 +32,7 @@ import MultiSigFactory from "../constants/MultiSigFactory.json";
 import config from "../constants/config.json";
 import ConfirmTxn from './DialogBoxes/Confirm'
 import RevokeTxn from './DialogBoxes/Revoke'
+import ExecuteTxn from './DialogBoxes/Execute'
 
 // Mock data for transactions
 const transactions = [
@@ -181,7 +182,8 @@ export default function WalletPage() {
 
         <RevokeTxn factory={factory} tempAddress={tempAddress} />
 
-        <Button className="bg-red-700 hover:bg-red-600">Execute Transaction</Button>
+        <ExecuteTxn factory={factory} tempAddress={tempAddress} />
+        
       </div>
 
       <Table>

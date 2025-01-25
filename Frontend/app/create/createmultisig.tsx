@@ -71,20 +71,6 @@ export default function CreateMultiSigWallet(provider: any, factory: any) {
   }
   
 
-  // async function listHandler(form: any) {
-  //   const name = form.get("name");
-  //   const ticker = form.get("ticker")
-
-  //   const signer = await provider.getSigner();
-
-  //   const transaction = await factory.connect(signer).create(name, ticker, {value: fee})
-  //   await transaction.wait();
-    
-  //   console.log("Submitted", name, ticker);
-
-  //   setShowCreate(false)
-  // }
-
 
 
   const handleSubmit = (e: React.FormEvent) => {

@@ -29,7 +29,7 @@ const ConfirmTxn = ({factory, tempAddress} : {factory: ethers.Contract, tempAddr
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
     <DialogTrigger asChild>
-      <Button className="bg-neon-green text-blue-900 hover:bg-neon-green/90">Confirm Proposal</Button>
+      <Button className="bg-blue-700 hover:bg-blue-600">Confirm Proposal</Button>
     </DialogTrigger>
     <DialogContent className="bg-blue-900 text-white">
       <DialogHeader>
@@ -52,6 +52,7 @@ const ConfirmTxn = ({factory, tempAddress} : {factory: ethers.Contract, tempAddr
 
         } catch(e) {
           console.log(e);
+          alert("Already confirmed")
         }
       }}>Confirm</Button>
     </DialogContent>

@@ -58,7 +58,7 @@ const SubmitTxn = ({factory, tempAddress} : {factory: ethers.Contract, tempAddre
           const success = await submitTxn(tempAddress, recipient, BigInt(value), description);
           console.log(success);
 
-          alert(`Proposal created successfully!`);
+          alert(`Proposal submitted successfully!`);
 
         } catch(e) {
           console.log(e);
