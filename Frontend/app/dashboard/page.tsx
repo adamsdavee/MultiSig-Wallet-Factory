@@ -9,7 +9,6 @@ import { DashboardLayout } from "@/components/DashboardLayout";
 import { client } from "../client";
 import { useActiveAccount, ConnectButton} from "thirdweb/react";
 import MultiSigCreationModal from "../create/multisigcreation";
-// import Data from "./Data";
 import { ethers } from "ethers";
 
 // ABIs & Configs
