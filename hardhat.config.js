@@ -14,16 +14,10 @@ module.exports = {
       chainId: 31337,
       allowUnlimitedContractSize: true,
     },
-    // sepolia: {
-    //   url: SEPOLIA_RPC_URL,
-    //   accounts: [PRIVATE_KEY],
-    //   chainId: 11155111,
-    //   blockConfirmations: 2,
-    // },
-    core: {
-      url: 'https://rpc.test.btcs.network',
+    telos: {
+      url: 'https://rpc.testnet.telos.net',
       accounts: [PRIVATE_KEY],
-      chainId: 1115,
+      chainId: 41,
     },
   },
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, LoaderIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,14 +11,64 @@ import { client } from "../client";
 import { useActiveAccount, ConnectButton} from "thirdweb/react";
 import MultiSigCreationModal from "../create/multisigcreation";
 import Data from "./Data";
+import { ethers } from "ethers";
+
+// ABIs & Configs
+import MultiSigFactory from "../constants/MultiSigFactory.json";
+import config from "../constants/config.json";
 
 
 export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [wallet, setWallet] = useState<{ walletAddress: string; timeCreated: bigint; balance: bigint; }[]>([]);;
 
+  const [factory, setFactory] = useState<ethers.Contract | undefined>(undefined);
+  const [provider, setProvider] = useState<ethers.BrowserProvider | undefined>(undefined);
 
   const activeAccount = useActiveAccount();
+
+  async function loadBlockchainData() {
+    if (typeof (window as any).ethereum !== "undefined") {
+      const provider = new ethers.BrowserProvider((window as any).ethereum);
+      setProvider(provider);
+      console.log("Ethereum provider detected");
+      console.log(provider)
+
+      const signer = await provider.getSigner();
+      console.log(signer);
+      console.log(signer.address);
+
+      const network = await provider.getNetwork();
+      console.log(network.chainId);
+
+      const chainId = network.chainId.toString();
+      const address = config[`${network.chainId}` as keyof typeof config].factory.address as string;
+      console.log(address)
+
+      const contractFactory = new ethers.Contract(address, MultiSigFactory, provider);
+      console.log(contractFactory);
+
+      setFactory(contractFactory);
+
+      const fee = await contractFactory.getDeployersWallets();
+      console.log(fee);
+
+      // setFee(fee);
+
+      // await contractFactory.connect(signer).createMultiSig(_owners, BigInt(1))
+
+      // Token details
+      // const totalTokens = await contractFactory.totalTokens();
+      // console.log(totalTokens);
+      // const tokens = [];
+  } else {
+    console.error("Contract details not found!")
+  }
+}
+
+useEffect(() => {
+  loadBlockchainData();
+}, []);
 
   return (
     <DashboardLayout>

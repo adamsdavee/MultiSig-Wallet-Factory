@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,12 +15,19 @@ import { Loader2 } from "lucide-react";
 import { defineChain, getContract, prepareContractCall } from "thirdweb";
 import { useSendTransaction, useReadContract } from "thirdweb/react";
 import { client } from "../client";
+import { ethers } from "ethers";
+
+// ABIs & Configs
+import MultiSigFactory from "../constants/MultiSigFactory.json";
+import config from "../constants/config.json";
 
 export default function CreateMultiSigWallet() {
   const [name, setName] = useState("");
   const [owners, setOwners] = useState([""]);
   const [requiredConfirmations, setRequiredConfirmations] = useState(1);
   const [isCreating, setIsCreating] = useState(false);
+  const [factory, setFactory] = useState<ethers.Contract | undefined>(undefined);
+  const [provider, setProvider] = useState<ethers.BrowserProvider | undefined>(undefined);
 
   const handleAddOwner = () => setOwners([...owners, ""]);
 
@@ -59,6 +66,51 @@ export default function CreateMultiSigWallet() {
       });
     });
   };
+
+
+
+  async function loadBlockchainData() {
+    if (typeof (window as any).ethereum !== "undefined") {
+      const provider = new ethers.BrowserProvider((window as any).ethereum);
+      setProvider(provider);
+      console.log("Ethereum provider detected");
+      console.log(provider)
+
+      const signer = await provider.getSigner();
+      console.log(signer);
+      console.log(signer.address);
+
+      const network = await provider.getNetwork();
+      console.log(network.chainId);
+
+      const chainId = network.chainId.toString();
+      const address = config[`${network.chainId}` as keyof typeof config].factory.address as string;
+      console.log(address)
+
+      const contractFactory = new ethers.Contract(address, MultiSigFactory, provider);
+      console.log(contractFactory);
+
+      setFactory(contractFactory);
+
+      const fee = await contractFactory.getDeployersWallets();
+      console.log(fee);
+
+      // setFee(fee);
+
+      // await contractFactory.connect(signer).createMultiSig(_owners, BigInt(1))
+
+      // Token details
+      const totalTokens = await contractFactory.totalTokens();
+      console.log(totalTokens);
+      const tokens = [];
+  }
+}
+
+  async function createMultiSig() {}
+
+  useEffect(() => {
+    loadBlockchainData();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
