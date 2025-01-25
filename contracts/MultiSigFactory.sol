@@ -24,7 +24,7 @@ contract MultiSigFactory {
         feeReceiver = _feeReceiver;
     }
 
-    function createMultiSig(address[] memory _owners, uint256 _noOfConfirmations) payable external returns (address multisigAddress) {
+    function createMultiSig(address[] memory _owners, uint256 _noOfConfirmations) payable public returns (address multisigAddress) {
 
         bytes memory bytecode = type(MultiSig).creationCode;
         bytes32 salt = keccak256(abi.encodePacked(_owners, _noOfConfirmations));

@@ -10,8 +10,9 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import CreateMultiSigWallet from './createmultisig'
+import { Factory } from 'lucide-react'
 
-const MultiSigCreationModal = () => {
+const MultiSigCreationModal = (provider: any, factory: any) => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
@@ -30,7 +31,7 @@ const MultiSigCreationModal = () => {
               Create MultiSig
             </DialogTitle>
           </DialogHeader>
-          <CreateMultiSigWallet />
+          <CreateMultiSigWallet provider={provider} factory={factory} />
         </DialogContent>
       </Dialog>
     </div>

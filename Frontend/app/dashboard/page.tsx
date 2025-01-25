@@ -10,7 +10,7 @@ import Link from "next/link";
 import { client } from "../client";
 import { useActiveAccount, ConnectButton} from "thirdweb/react";
 import MultiSigCreationModal from "../create/multisigcreation";
-import Data from "./Data";
+// import Data from "./Data";
 import { ethers } from "ethers";
 
 // ABIs & Configs
@@ -20,7 +20,8 @@ import config from "../constants/config.json";
 
 export default function Dashboard() {
   const [search, setSearch] = useState("");
-  const [wallet, setWallet] = useState<{ walletAddress: string; timeCreated: bigint; balance: bigint; }[]>([]);;
+  const [wallet, setWallet] = useState<{ walletAddress: string; timeCreated: bigint; balance: bigint; }[]>([]);
+  const [address, setAddress] = useState("");
 
   const [factory, setFactory] = useState<ethers.Contract | undefined>(undefined);
   const [provider, setProvider] = useState<ethers.BrowserProvider | undefined>(undefined);
@@ -50,8 +51,11 @@ export default function Dashboard() {
 
       setFactory(contractFactory);
 
-      const fee = await contractFactory.getDeployersWallets();
-      console.log(fee);
+      const fee = await contractFactory.getDeployersWallets(signer.address);
+      console.log(`Deployer's wallets: ${fee}`);
+
+      // setAddress(signer.address);
+      setWallet(fee);
 
       // setFee(fee);
 
@@ -76,7 +80,7 @@ useEffect(() => {
         <h1 className="text-3xl font-bold">Wallet Dashboard</h1>
         {/* <MultiSigCreationModal /> */}
         {activeAccount?.address ? (
-          <MultiSigCreationModal />
+          <MultiSigCreationModal provider={provider} factory={factory} />
         ) : (
           <ConnectButton client={client} />
         )}
@@ -88,7 +92,7 @@ useEffect(() => {
           {activeAccount?.address || "Not Connected"}
         </p>
       </div>
-        <Data setWallet={setWallet}/>
+        {/* {address && {<Data setWallet={setWallet}/>}} */}
 
       <div className="mb-8">
         <div className="flex items-center mb-4">
