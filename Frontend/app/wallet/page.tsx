@@ -31,6 +31,7 @@ import SubmitTxn from './DialogBoxes/Submit'
 import MultiSigFactory from "../constants/MultiSigFactory.json";
 import config from "../constants/config.json";
 import ConfirmTxn from './DialogBoxes/Confirm'
+import RevokeTxn from './DialogBoxes/Revoke'
 
 // Mock data for transactions
 const transactions = [
@@ -178,7 +179,8 @@ export default function WalletPage() {
 
         <ConfirmTxn factory={factory} tempAddress={tempAddress} />
 
-        <Button className="bg-red-700 hover:bg-red-600">Revoke Transaction</Button>
+        <RevokeTxn factory={factory} tempAddress={tempAddress} />
+
         <Button className="bg-red-700 hover:bg-red-600">Execute Transaction</Button>
       </div>
 
