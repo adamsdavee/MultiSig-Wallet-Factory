@@ -21,7 +21,8 @@ import config from "../constants/config.json";
 export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [wallet, setWallet] = useState<{ walletAddress: string; timeCreated: bigint; balance: bigint; }[]>([]);
-  const [address, setAddress] = useState("");
+
+  const [isOpen, setIsOpen] = useState(false)
 
   const [factory, setFactory] = useState<ethers.Contract | undefined>(undefined);
   const [provider, setProvider] = useState<ethers.BrowserProvider | undefined>(undefined);
@@ -81,15 +82,15 @@ export default function Dashboard() {
 
 useEffect(() => {
   loadBlockchainData();
-}, []);
+}, [isOpen]);
 
   return (
     <DashboardLayout>
       <div className="flex items-center justify-between ">
-        <h1 className="text-3xl font-bold">Wallett Dashboard</h1>
+        <h1 className="text-3xl font-bold">Wallet Dashboard</h1>
         {/* <MultiSigCreationModal /> */}
         {activeAccount?.address ? (
-          <MultiSigCreationModal provider={provider} factory={factory} />
+          <MultiSigCreationModal isOpen={isOpen} setIsOpen={setIsOpen} provider={provider} factory={factory} />
         ) : (
           <ConnectButton client={client} />
         )}

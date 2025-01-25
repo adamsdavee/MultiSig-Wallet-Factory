@@ -12,8 +12,7 @@ import {
 import CreateMultiSigWallet from './createmultisig'
 import { Factory } from 'lucide-react'
 
-const MultiSigCreationModal = (provider: any, factory: any) => {
-  const [isOpen, setIsOpen] = useState(false)
+const MultiSigCreationModal = ({isOpen, setIsOpen, provider, factory} : {isOpen: any, setIsOpen: any, provider: any, factory: any}) => {
 
   return (
     <div className="mb-8 space-x-4">
