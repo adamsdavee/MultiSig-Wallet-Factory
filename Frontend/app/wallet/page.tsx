@@ -25,11 +25,12 @@ import { AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 import { client } from "../client"
 import { useActiveAccount, ConnectButton } from "thirdweb/react";
 import { ethers } from 'ethers';
-import Submit from './DialogBoxes/Submit'
+import SubmitTxn from './DialogBoxes/Submit'
 
 // ABIs & Configs
 import MultiSigFactory from "../constants/MultiSigFactory.json";
 import config from "../constants/config.json";
+import ConfirmTxn from './DialogBoxes/Confirm'
 
 // Mock data for transactions
 const transactions = [
@@ -107,7 +108,7 @@ export default function WalletPage() {
       <div className="flex items-center justify-between mb-9">
         <div>
             <h1 className="text-3xl font-bold">
-            Wallett: 
+            Wallet: 
           </h1>
           <p>{activeAccount?.address || "Not connected"}</p>
         </div>
@@ -173,20 +174,10 @@ export default function WalletPage() {
 
       <div className="mb-8 space-x-4">
 
-        <Submit isOpen={isOpen} setIsOpen={setIsOpen} factory={factory} tempAddress={tempAddress} />
+        <SubmitTxn factory={factory} tempAddress={tempAddress} />
 
-        <Button className="bg-blue-700 hover:bg-blue-600"  onClick={async() => {
-              try {
-                
-                // await ConfirmTxn(tempAddress, BigInt(200));
-                // console.log(success)
-                console.log(tempAddress)
-                console.log(description);
-                console.log(recipient)
-              } catch(e) {
-                console.log(e);
-              }
-            }}> Confirm Transaction </Button>
+        <ConfirmTxn factory={factory} tempAddress={tempAddress} />
+
         <Button className="bg-red-700 hover:bg-red-600">Revoke Transaction</Button>
         <Button className="bg-red-700 hover:bg-red-600">Execute Transaction</Button>
       </div>

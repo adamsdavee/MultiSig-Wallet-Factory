@@ -11,8 +11,9 @@ import {
   import { Button } from '@/components/ui/button'
   import { ethers } from 'ethers';
 
-const Submit = ({isOpen, setIsOpen, factory, tempAddress} : {isOpen: any, setIsOpen: any, factory: ethers.Contract, tempAddress: string}) => {
+const SubmitTxn = ({factory, tempAddress} : {factory: ethers.Contract, tempAddress: string}) => {
 
+    const [isOpen, setIsOpen] = useState(false);
     const [recipient, setRecipient] = useState("");
     const [value, setValue] = useState("");
     const [description, setDescription] = useState("");
@@ -68,4 +69,4 @@ const Submit = ({isOpen, setIsOpen, factory, tempAddress} : {isOpen: any, setIsO
   )
 }
 
-export default Submit
+export default SubmitTxn
