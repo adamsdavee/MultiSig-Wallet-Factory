@@ -19,7 +19,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               </Link>
             </li>
             <li>
-              <Link href="/wallet/address" className="flex items-center py-2 px-4 hover:bg-blue-800 rounded transition-colors">
+              <Link href="/wallet" className="flex items-center py-2 px-4 hover:bg-blue-800 rounded transition-colors">
                 <FileText className="mr-2 h-4 w-4" />
                 Transactions
               </Link>

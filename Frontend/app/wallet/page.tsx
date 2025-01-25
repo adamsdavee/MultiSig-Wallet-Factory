@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Table,
@@ -22,15 +22,14 @@ import { Label } from '@/components/ui/label'
 import { DashboardLayout } from '@/components/DashboardLayout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { AlertCircle, CheckCircle, XCircle } from 'lucide-react'
-import { client } from "../../client"
-import { useActiveAccount, ConnectButton, useSendTransaction, useReadContract } from "thirdweb/react";
-import { defineChain, getContract, prepareContractCall } from "thirdweb";
-import { Description } from '@radix-ui/react-dialog';
+import { client } from "../client"
+import { useActiveAccount, ConnectButton } from "thirdweb/react";
 import { ethers } from 'ethers';
+import Submit from './DialogBoxes/Submit'
 
 // ABIs & Configs
-import MultiSigFactory from "../../constants/MultiSigFactory.json";
-import config from "../../constants/config.json";
+import MultiSigFactory from "../constants/MultiSigFactory.json";
+import config from "../constants/config.json";
 
 // Mock data for transactions
 const transactions = [
@@ -43,68 +42,6 @@ const transactions = [
 
 export default function WalletPage() {
 
-  const chain = defineChain(1115);
-  
-    const contract = getContract({
-        client,
-        address: "0x3c7eD317074CB301a421aCa92Ad37941f7F030F8",
-        chain: chain,
-      });
-    
-      const { mutate: sendTransaction } = useSendTransaction();
-
-    const CreateMultiSig = async (address: string[], amount: bigint) => {
-        const approve = prepareContractCall({
-          contract,
-          method: "function createMultiSig(address[] memory _owners, uint256 _noOfConfirmations)",
-          params: [address, amount],
-        });
-        return new Promise((resolve, reject) => {
-          sendTransaction(approve, {
-            onSuccess: () => resolve(true),
-            onError: (error) => reject(error),
-          });
-        });
-    };
-
-    const { data: testing, } = useReadContract({
-      contract,
-      method: "function getAllDeployedMultiSigs() returns (address[] memory)",
-      params: [],
-    });
-
-    const SubmitTxn = async (addressSig: string, addressTo: string, amount: bigint, description: string) => {
-      const approve = prepareContractCall({
-        contract,
-        method:
-          "function submitTransaction(address multisigAddress, address _to, uint256 _value, string memory _description)",
-        params: [addressSig, addressTo, amount, description],
-      });
-      return new Promise((resolve, reject) => {
-        sendTransaction(approve, {
-          onSuccess: () => resolve(true),
-          onError: (error) => reject(error),
-        });
-      });
-    };
-
-
-    const ConfirmTxn = async (addressSig: string, index: bigint) => {
-      const approve = prepareContractCall({
-        contract,
-        method:
-          "function confirmTransaction(address multisigAddress, uint256 _proposalIndex)",
-        params: [addressSig, index],
-      });
-
-      return new Promise((resolve, reject) => {
-        sendTransaction(approve, {
-          onSuccess: () => resolve(true),
-          onError: (error) => reject(error),
-        });
-      });
-    };
-
   const activeAccount = useActiveAccount();
   
   const [isOpen, setIsOpen] = useState(false);
@@ -114,17 +51,17 @@ export default function WalletPage() {
   const [recipient, setRecipient] = useState("");
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
+  const [factory, setFactory] = useState<ethers.Contract | any>();
+  const [provider, setProvider] = useState<ethers.BrowserProvider | undefined>(undefined);
   const [proposals, setProposals] = useState<any[]>([])
 
-  async function submitTxn(addressSig: string, addressTo: string, amount: bigint, description: string) {
+  async function loadBlockchainData() {
     if (typeof (window as any).ethereum !== "undefined") {
       const provider = new ethers.BrowserProvider((window as any).ethereum);
-  
-      console.log("Submittting txn....");
+
+      console.log("Loading Blockchain data...");
   
       const signer = await provider.getSigner();
-      console.log(signer);
-      console.log(await signer.getAddress());
   
       const network = await provider.getNetwork();
       console.log(network.chainId);
@@ -135,26 +72,17 @@ export default function WalletPage() {
   
       const contractFactory = new ethers.Contract(address, MultiSigFactory, signer);
       console.log(contractFactory);
+      setFactory(contractFactory)
   
-      const value = ethers.parseEther("0.01");
-  
-      // Call the createMultiSig function
-      const transaction = await contractFactory.submitTransaction(addressSig, addressTo, amount, description);
-      await transaction.wait();
-
-      const proposals = await contractFactory.getAllProposals(addressSig);
-      // await proposals.wait();
-      setProposals(proposals);
-
-      const owners = await contractFactory.getOwners(addressSig);
-      // await owners.wait();
-      console.log(`owners: ${owners}`)
-
-      console.log(`proposals: ${proposals}`);
-  
-      console.log("Done!");
+      console.log("Data loading done!");
     }
   }
+
+
+
+  useEffect(() => {
+    loadBlockchainData();
+  }, []);
 
   const handleSubmit = () => {
     setIsWallet(tempAddress); // Update isWallet only after submitting
@@ -179,7 +107,7 @@ export default function WalletPage() {
       <div className="flex items-center justify-between mb-9">
         <div>
             <h1 className="text-3xl font-bold">
-            Wallet: 
+            Wallett: 
           </h1>
           <p>{activeAccount?.address || "Not connected"}</p>
         </div>
@@ -244,54 +172,17 @@ export default function WalletPage() {
       </div>
 
       <div className="mb-8 space-x-4">
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-neon-green text-blue-900 hover:bg-neon-green/90">Submit Transaction</Button>
-          </DialogTrigger>
-          <DialogContent className="bg-blue-900 text-white">
-            <DialogHeader>
-              <DialogTitle>Submit Transaction</DialogTitle>
-            </DialogHeader>
-            <form className="space-y-4">
-              <div>
-                <Label htmlFor="recipient">Recipient Address</Label>
-                <Input id="recipient" className="bg-blue-800 border-blue-700 text-white" value={recipient} onChange={(e) => setRecipient(e.target.value)}/>
-              </div>
-              <div>
-                <Label htmlFor="value">Value (Core)</Label>
-                <Input id="value" type="number" step="0.01" className="bg-blue-800 border-blue-700 text-white" value={value} onChange={(e) => setValue(e.target.value)}/>
-              </div>
-              <div>
-                <Label htmlFor="data">Description</Label>
-                <Input id="data" className="bg-blue-800 border-blue-700 text-white" value={description} onChange={(e) => setDescription(e.target.value)} />
-              </div>
-              
-            </form>
-            <Button type="submit" className="bg-neon-green text-blue-900 hover:bg-neon-green/90" onClick={async() => {
-              try {
-                
-                const success = await submitTxn(tempAddress, recipient, BigInt(value), description);
-                console.log(success);
-                console.log(proposals);
-                console.log(tempAddress)
-                console.log(description);
-                console.log(recipient)
-                console.log(testing)
-              } catch(e) {
-                console.log(e);
-              }
-            }}>Submitt</Button>
-          </DialogContent>
-        </Dialog>
+
+        <Submit isOpen={isOpen} setIsOpen={setIsOpen} factory={factory} tempAddress={tempAddress} />
+
         <Button className="bg-blue-700 hover:bg-blue-600"  onClick={async() => {
               try {
                 
-                await ConfirmTxn(tempAddress, BigInt(200));
+                // await ConfirmTxn(tempAddress, BigInt(200));
                 // console.log(success)
                 console.log(tempAddress)
                 console.log(description);
                 console.log(recipient)
-                console.log(testing)
               } catch(e) {
                 console.log(e);
               }

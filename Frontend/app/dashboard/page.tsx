@@ -52,19 +52,19 @@ export default function Dashboard() {
 
       setFactory(contractFactory);
 
-      const fee = await contractFactory.getDeployersWallets(signer.address);
-      console.log(`Deployer's wallets: ${fee}`);
+      const samrtWallet = await contractFactory.getDeployersWallets(signer.address);
+      console.log(`Deployer's wallets: ${samrtWallet}`);
 
-      const proposals = await contractFactory.getAllProposals("0xA69cfd8Cc168C1181EBE546a7c10fcf9253EeA6d");
+      // const proposals = await contractFactory.getAllProposals("0xA69cfd8Cc168C1181EBE546a7c10fcf9253EeA6d");
 
-      const owners = await contractFactory.getOwners("0xA69cfd8Cc168C1181EBE546a7c10fcf9253EeA6d");
-      // await owners.wait();
-      console.log(`owners: ${owners}`)
+      // const owners = await contractFactory.getOwners("0xA69cfd8Cc168C1181EBE546a7c10fcf9253EeA6d");
+      // // await owners.wait();
+      // console.log(`owners: ${owners}`)
 
-      console.log(`proposals: ${proposals}`);
+      // console.log(`proposals: ${proposals}`);
 
       // setAddress(signer.address);
-      setWallet(fee);
+      setWallet(samrtWallet);
 
       // setFee(fee);
 
