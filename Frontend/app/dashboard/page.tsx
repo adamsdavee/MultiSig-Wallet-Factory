@@ -47,12 +47,21 @@ export default function Dashboard() {
       console.log(address)
 
       const contractFactory = new ethers.Contract(address, MultiSigFactory, provider);
+      // const Factory = new ethers.Contract(address, MultiSigFactory, signer);
       console.log(contractFactory);
 
       setFactory(contractFactory);
 
       const fee = await contractFactory.getDeployersWallets(signer.address);
       console.log(`Deployer's wallets: ${fee}`);
+
+      const proposals = await contractFactory.getAllProposals("0xA69cfd8Cc168C1181EBE546a7c10fcf9253EeA6d");
+
+      const owners = await contractFactory.getOwners("0xA69cfd8Cc168C1181EBE546a7c10fcf9253EeA6d");
+      // await owners.wait();
+      console.log(`owners: ${owners}`)
+
+      console.log(`proposals: ${proposals}`);
 
       // setAddress(signer.address);
       setWallet(fee);
@@ -77,7 +86,7 @@ useEffect(() => {
   return (
     <DashboardLayout>
       <div className="flex items-center justify-between ">
-        <h1 className="text-3xl font-bold">Wallet Dashboard</h1>
+        <h1 className="text-3xl font-bold">Wallett Dashboard</h1>
         {/* <MultiSigCreationModal /> */}
         {activeAccount?.address ? (
           <MultiSigCreationModal provider={provider} factory={factory} />

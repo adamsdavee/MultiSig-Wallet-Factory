@@ -25,7 +25,12 @@ import { AlertCircle, CheckCircle, XCircle } from 'lucide-react'
 import { client } from "../../client"
 import { useActiveAccount, ConnectButton, useSendTransaction, useReadContract } from "thirdweb/react";
 import { defineChain, getContract, prepareContractCall } from "thirdweb";
-import { Description } from '@radix-ui/react-dialog'
+import { Description } from '@radix-ui/react-dialog';
+import { ethers } from 'ethers';
+
+// ABIs & Configs
+import MultiSigFactory from "../../constants/MultiSigFactory.json";
+import config from "../../constants/config.json";
 
 // Mock data for transactions
 const transactions = [
@@ -36,7 +41,7 @@ const transactions = [
 
 
 
-export default function WalletPage({ params }: { params: { address: string } }) {
+export default function WalletPage() {
 
   const chain = defineChain(1115);
   
@@ -109,6 +114,47 @@ export default function WalletPage({ params }: { params: { address: string } }) 
   const [recipient, setRecipient] = useState("");
   const [value, setValue] = useState("");
   const [description, setDescription] = useState("");
+  const [proposals, setProposals] = useState<any[]>([])
+
+  async function submitTxn(addressSig: string, addressTo: string, amount: bigint, description: string) {
+    if (typeof (window as any).ethereum !== "undefined") {
+      const provider = new ethers.BrowserProvider((window as any).ethereum);
+  
+      console.log("Submittting txn....");
+  
+      const signer = await provider.getSigner();
+      console.log(signer);
+      console.log(await signer.getAddress());
+  
+      const network = await provider.getNetwork();
+      console.log(network.chainId);
+  
+      const chainId = network.chainId.toString();
+      const address = config[`${network.chainId}` as keyof typeof config].factory.address as string;
+      console.log(address);
+  
+      const contractFactory = new ethers.Contract(address, MultiSigFactory, signer);
+      console.log(contractFactory);
+  
+      const value = ethers.parseEther("0.01");
+  
+      // Call the createMultiSig function
+      const transaction = await contractFactory.submitTransaction(addressSig, addressTo, amount, description);
+      await transaction.wait();
+
+      const proposals = await contractFactory.getAllProposals(addressSig);
+      // await proposals.wait();
+      setProposals(proposals);
+
+      const owners = await contractFactory.getOwners(addressSig);
+      // await owners.wait();
+      console.log(`owners: ${owners}`)
+
+      console.log(`proposals: ${proposals}`);
+  
+      console.log("Done!");
+    }
+  }
 
   const handleSubmit = () => {
     setIsWallet(tempAddress); // Update isWallet only after submitting
@@ -224,8 +270,9 @@ export default function WalletPage({ params }: { params: { address: string } }) 
             <Button type="submit" className="bg-neon-green text-blue-900 hover:bg-neon-green/90" onClick={async() => {
               try {
                 
-                // const success = await SubmitTxn(tempAddress, recipient, BigInt(value), description);
-                // console.log(success)
+                const success = await submitTxn(tempAddress, recipient, BigInt(value), description);
+                console.log(success);
+                console.log(proposals);
                 console.log(tempAddress)
                 console.log(description);
                 console.log(recipient)

@@ -74,23 +74,21 @@ contract MultiSigFactory {
     }
 
     // rOUTER TO GETTER FUNCIONS FROM THE MULTISIGS
-    function getOwners(address multisigAddress) public returns (address[] memory) {
-        address[] memory owners = IMultiSig(multisigAddress).getOwners();
+    function getOwners(address multisigAddress) public view returns (address[] memory) {
+        address[] memory owners = MultiSig(multisigAddress).getOwners();
         return owners;
     }
 
-    function getDeployer(address multisigAddress) public returns (address) {
-        return IMultiSig(multisigAddress).getDeployer();
+    function getDeployer(address multisigAddress) public view returns (address) {
+        return MultiSig(multisigAddress).getDeployer();
     }
 
-    function getAllProposals(address multisigAddress) public returns (IMultiSig.Transaction[] memory) {
-        IMultiSig.Transaction[] memory transactions = IMultiSig(multisigAddress).getAllProposals();
-        return transactions;
+    function getAllProposals(address multisigAddress) public view returns (MultiSig.Transaction[] memory) {
+        return MultiSig(multisigAddress).getAllProposals();
     }
 
-    function getTimeCreated(address multisigAddress) public returns (uint256) {
-        uint256 deployedTime = IMultiSig(multisigAddress).getTimeCreated();
-        return deployedTime;
+    function getTimeCreated(address multisigAddress) public view returns (uint256) {
+        return MultiSig(multisigAddress).getTimeCreated();
     }
 
     function getDeployersWallets(address deployer) public view returns (Wallets[] memory) {
