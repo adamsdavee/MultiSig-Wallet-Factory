@@ -51,10 +51,10 @@ export default function Dashboard() {
 
       setFactory(contractFactory);
 
-      const samrtWallet = await contractFactory.getDeployersWallets(signer.address);
-      console.log(`Deployer's wallets: ${samrtWallet}`);
+      const smartWallet = await contractFactory.getDeployersWallets(signer.address);
+      console.log(`Deployer's wallets: ${smartWallet}`);
 
-      setWallet(samrtWallet);
+      setWallet(smartWallet);
 
   } else {
     console.error("Contract details not found!")
