@@ -35,7 +35,7 @@ Ensure you have the following installed:
 2. **Install Dependencies**:
 
    ```bash
-   npm install
+   npm install --legacy-peer-deps
    ```
 
 ### Running the Application
@@ -43,7 +43,7 @@ Ensure you have the following installed:
 1. **Start the Local Blockchain**:
 
    ```bash
-   npm chain
+   npx hardhat node "For local setup"
    ```
 
    This command starts a local Hardhat blockchain instance.
