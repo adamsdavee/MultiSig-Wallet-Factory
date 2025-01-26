@@ -33,7 +33,7 @@ Ensure you have the following installed:
 2. **Install Dependencies**:
 
    ```bash
-   yarn install
+   npm install
    ```
 
 ### Running the Application
@@ -41,7 +41,7 @@ Ensure you have the following installed:
 1. **Start the Local Blockchain**:
 
    ```bash
-   yarn chain
+   npm chain
    ```
 
    This command starts a local Hardhat blockchain instance.
@@ -49,15 +49,17 @@ Ensure you have the following installed:
 2. **Deploy Contracts**:
 
    ```bash
-   yarn deploy
+   npx hardhat run scripts/deploy-multisig.js --network localhost "For Local Blockchain"
+   npx hardhat run scripts/deploy-multisig.js --network telos "For Telos Blockchain"
    ```
 
-   This command deploys the multisig wallet contracts to the local blockchain.
+   This command deploys the multisig wallet contracts to the local or telos blockchain.
 
 3. **Start the Frontend Application**:
 
    ```bash
-   yarn start
+   cd MultiSig-Wallet-Factory/Frontend
+   npm start
    ```
 
    This command starts the React frontend application.
