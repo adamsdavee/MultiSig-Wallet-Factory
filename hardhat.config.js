@@ -19,5 +19,10 @@ module.exports = {
       accounts: [PRIVATE_KEY],
       chainId: 41,
     },
+    opencampus: {
+      url: 'https://rpc.open-campus-codex.gelato.digital/',
+      accounts: [PRIVATE_KEY],
+      chainId: 656476,
+    },
   },
 };
